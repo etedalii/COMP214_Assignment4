@@ -260,6 +260,14 @@ CREATE SEQUENCE SEQ_PRODUCT
  MAXVALUE 999999999999999 
  MINVALUE 1
  CACHE 20;
+ 
+CREATE SEQUENCE SEQ_USER
+ INCREMENT BY 1
+ START WITH 8000
+ MAXVALUE 8888888888888
+ MINVALUE -888888888888 
+ CYCLE;
+
 
 --********************************************************************************************************
 insert into categories (categoryid,catname) VALUES (SEQ_GENERAL.nextval,'Art');
@@ -319,64 +327,64 @@ insert into Discounts (discountid,name,discount,startdate,enddate,qty)
 	
 --********************************************************************************************	
 insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
-    values(SEQ_GENERAL.nextval,'mohammad','etedali','etedali@gmail.com','12-July-85','Male');
+    values(SEQ_USER.nextval,'mohammad','etedali','etedali@gmail.com','12-July-85','Male');
 insert into address (addressid,user_id,city,no,street,province,postalcode,phone)
-    values(SEQ_ADDRESS.nextval,SEQ_GENERAL.currval,'Scarborough','63','Darlingside Dr','ON','M1E3P2','4167221611');
+    values(SEQ_ADDRESS.nextval,SEQ_USER.currval,'Scarborough','63','Darlingside Dr','ON','M1E3P2','4167221611');
     
 insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
-    values(SEQ_GENERAL.nextval,'Ann','Elerk','Ann@gmail.com','12-Oct-95','Female');
+    values(SEQ_USER.nextval,'Ann','Elerk','Ann@gmail.com','12-Oct-95','Female');
 insert into address (addressid,user_id,city,no,street,province,postalcode,phone)
-    values(SEQ_ADDRESS.nextval,SEQ_GENERAL.currval,'Toronto','235','Young','ON','M1G222','4156587845');
+    values(SEQ_ADDRESS.nextval,SEQ_USER.currval,'Toronto','235','Young','ON','M1G222','4156587845');
     
 insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
-    values(SEQ_GENERAL.nextval,'Atieh','Hosseini','Atieh@gmail.com','14-June-88','Female');
+    values(SEQ_USER.nextval,'Atieh','Hosseini','Atieh@gmail.com','14-June-88','Female');
 insert into address (addressid,user_id,city,no,street,province,postalcode,phone)
-    values(SEQ_ADDRESS.nextval,SEQ_GENERAL.currval,'Victoria','41','St George','BC','KLM232','684752145');
+    values(SEQ_ADDRESS.nextval,SEQ_USER.currval,'Victoria','41','St George','BC','KLM232','684752145');
     
 insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
-    values(SEQ_GENERAL.nextval,'Bob','Easter','Bob@yahoo.com','18-Dec-65','Male');
+    values(SEQ_USER.nextval,'Bob','Easter','Bob@yahoo.com','18-Dec-65','Male');
 insert into address (addressid,user_id,city,no,street,province,postalcode,phone)
-    values(SEQ_ADDRESS.nextval,SEQ_GENERAL.currval,'Alabama','12','MCCowen','AL','GKRE43','1254698754');
+    values(SEQ_ADDRESS.nextval,SEQ_USER.currval,'Alabama','12','MCCowen','AL','GKRE43','1254698754');
     
 insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
-    values(SEQ_GENERAL.nextval,'John','Kale','Kale@msn.com','16-Jan-62','Male');
+    values(SEQ_USER.nextval,'John','Kale','Kale@msn.com','16-Jan-62','Male');
 insert into address (addressid,user_id,city,no,street,province,postalcode,phone)
-    values(SEQ_ADDRESS.nextval,SEQ_GENERAL.currval,'Alabama','12','MCCowen','AB','GKRE43','1254698754');
+    values(SEQ_ADDRESS.nextval,SEQ_USER.currval,'Alabama','12','MCCowen','AB','GKRE43','1254698754');
     
 insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
-    values(SEQ_GENERAL.nextval,'James','Junior','James@gmail.com','02-Feb-90','Male');
+    values(SEQ_USER.nextval,'James','Junior','James@gmail.com','02-Feb-90','Male');
 insert into address (addressid,user_id,city,no,street,province,postalcode,phone)
-    values(SEQ_ADDRESS.nextval,SEQ_GENERAL.currval,'Yukon','98','Yukon ','YT','YTRE43','5642779832');
+    values(SEQ_ADDRESS.nextval,SEQ_USER.currval,'Yukon','98','Yukon ','YT','YTRE43','5642779832');
     
 insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
-    values(SEQ_GENERAL.nextval,'Kathy','Hoss','hoss@msn.com','09-Nov-04','Female');
+    values(SEQ_USER.nextval,'Kathy','Hoss','hoss@msn.com','09-Nov-04','Female');
 insert into address (addressid,user_id,city,no,street,province,postalcode,phone)
-    values(SEQ_ADDRESS.nextval,SEQ_GENERAL.currval,'NUVANUT','127','St Philip','NT','NERE33','6472779832');
+    values(SEQ_ADDRESS.nextval,SEQ_USER.currval,'NUVANUT','127','St Philip','NT','NERE33','6472779832');
     
 insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
-    values(SEQ_GENERAL.nextval,'Nazy','Tabaei','Nazy@gmail.com','12-Sep-01','Female');
+    values(SEQ_USER.nextval,'Nazy','Tabaei','Nazy@gmail.com','12-Sep-01','Female');
 insert into address (addressid,user_id,city,no,street,province,postalcode,phone)
-    values(SEQ_ADDRESS.nextval,SEQ_GENERAL.currval,'Montreal','56','Quebec Dr','QC','QCRD13','610779832');    
+    values(SEQ_ADDRESS.nextval,SEQ_USER.currval,'Montreal','56','Quebec Dr','QC','QCRD13','610779832');    
     
 insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
-    values(SEQ_GENERAL.nextval,'Sara','Sirvan','ssvan@yahoo.com','19-Nov-89','Female');
+    values(SEQ_USER.nextval,'Sara','Sirvan','ssvan@yahoo.com','19-Nov-89','Female');
 insert into address (addressid,user_id,city,no,street,province,postalcode,phone)
-    values(SEQ_ADDRESS.nextval,SEQ_GENERAL.currval,'Quebec City','8','Dundas Dr','QC','QCRD13','610779832');     
+    values(SEQ_ADDRESS.nextval,SEQ_USER.currval,'Quebec City','8','Dundas Dr','QC','QCRD13','610779832');     
     
 insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
-    values(SEQ_GENERAL.nextval,'Soren','serjoei','sorejo@gmail.com','06-June-91','Male');
+    values(SEQ_USER.nextval,'Soren','serjoei','sorejo@gmail.com','06-June-91','Male');
 insert into address (addressid,user_id,city,no,street,province,postalcode,phone)
-    values(SEQ_ADDRESS.nextval,SEQ_GENERAL.currval,'Montrear','418','Green Dr','QC','QCE516','124587254');   
+    values(SEQ_ADDRESS.nextval,SEQ_USER.currval,'Montrear','418','Green Dr','QC','QCE516','124587254');   
     
 insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
-    values(SEQ_GENERAL.nextval,'maral','mir','maralmir@gmail.com','10-Nov-95','Female');
+    values(SEQ_USER.nextval,'maral','mir','maralmir@gmail.com','10-Nov-95','Female');
 insert into address (addressid,user_id,city,no,street,province,postalcode,phone)
-    values(SEQ_ADDRESS.nextval,SEQ_GENERAL.currval,'Skyline','438','New Brun','NB','N2BG53','8254619857');     
+    values(SEQ_ADDRESS.nextval,SEQ_USER.currval,'Skyline','438','New Brun','NB','N2BG53','8254619857');     
     
 insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
-    values(SEQ_GENERAL.nextval,'Ahmad','etedali','ahmade@gmail.com','03-March-60','Male');
+    values(SEQ_USER.nextval,'Ahmad','etedali','ahmade@gmail.com','03-March-60','Male');
 insert into address (addressid,user_id,city,no,street,province,postalcode,phone)
-    values(SEQ_ADDRESS.nextval,SEQ_GENERAL.currval,'Toronto','64','Hulthman Dr','ON','m61G48','4154619007');     
+    values(SEQ_ADDRESS.nextval,SEQ_USER.currval,'Toronto','64','Hulthman Dr','ON','m61G48','4154619007');     
 	
 	
 	
