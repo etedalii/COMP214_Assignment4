@@ -1,3 +1,20 @@
+drop table carditems;
+drop table orderdetails;
+DROP TABLE ORDERS;
+DROP TABLE PRODUCTS;
+DROP TABLE CATEGORIES;
+DROP TABLE DISCOUNTS;
+DROP TABLE ADDRESS;
+DROP TABLE USERS;
+
+DROP SEQUENCE SEQ_USER;
+DROP SEQUENCE SEQ_ADDRESS;
+DROP SEQUENCE SEQ_CARDITEM;
+DROP SEQUENCE SEQ_GENERAL;
+DROP SEQUENCE SEQ_ORDER;
+DROP SEQUENCE SEQ_ORDERDETAIL;
+DROP SEQUENCE SEQ_PRODUCT;
+
 CREATE TABLE USERS 
 (
   USERID NUMBER NOT NULL 
@@ -117,18 +134,18 @@ CREATE TABLE DISCOUNTS
 
 CREATE TABLE CARDITEMS 
 (
-  CARDITEMS NUMBER NOT NULL 
+  CARDITEMSID NUMBER NOT NULL 
 , USER_ID NUMBER NOT NULL 
 , PRODUCT_ID NUMBER NOT NULL 
 , QTY NUMBER NOT NULL 
 , DATEADD DATE NOT NULL 
 , CONSTRAINT CARDITEMS_PK PRIMARY KEY 
   (
-    CARDITEMS 
+    CARDITEMSID 
   )
   USING INDEX 
   (
-      CREATE UNIQUE INDEX CARDITEMS_PK ON CARDITEMS (CARDITEMS ASC) 
+      CREATE UNIQUE INDEX CARDITEMSID_PK ON CARDITEMS (CARDITEMSID ASC) 
   )
   ENABLE 
 );
@@ -202,6 +219,7 @@ CREATE TABLE ORDERDETAILS
 , ORDER_ID NUMBER NOT NULL 
 , QTY NUMBER NOT NULL 
 , PRICE NUMBER NOT NULL 
+, PRODUCT_ID NUMBER 
 , CONSTRAINT ORDERDETAILS_PK PRIMARY KEY 
   (
     ORDERDETAILID 
@@ -214,7 +232,7 @@ CREATE TABLE ORDERDETAILS
 );
 
 ALTER TABLE ORDERDETAILS
-ADD CONSTRAINT ORDERDETAILS_FK1 FOREIGN KEY
+ADD CONSTRAINT ORDERDETAILS_FK_Order FOREIGN KEY
 (
   ORDER_ID 
 )
@@ -224,8 +242,19 @@ REFERENCES ORDERS
 )
 ENABLE;
 
+ALTER TABLE ORDERDETAILS
+ADD CONSTRAINT ORDERDETAILS_FK_PRODUCT FOREIGN KEY
+(
+  PRODUCT_ID 
+)
+REFERENCES PRODUCTS
+(
+  PRODUCTID 
+)
+ENABLE;
 
-CREATE SEQUENCE SEQ_ADDRESS 
+
+CREATE SEQUENCE  SEQ_ADDRESS 
 	INCREMENT BY 1
 	MAXVALUE 10000
 	MINVALUE 1
@@ -274,6 +303,13 @@ insert into categories (categoryid,catname) VALUES (SEQ_GENERAL.nextval,'Art');
 insert into products (productid,category_id,name,description,price,STATUS)
     values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Old Country Roses','Featuring sprays of red',75,1);
 	
+insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
+    values(SEQ_USER.nextval,'mohammad','etedali','etedali@gmail.com','12-July-85','Male');
+insert into address (addressid,user_id,city,no,street,province,postalcode,phone)
+    values(SEQ_ADDRESS.nextval,SEQ_USER.currval,'Scarborough','63','Darlingside Dr','ON','M1E3P2','4167221611');
+insert into carditems (carditemsid,user_id,product_id,qty,dateadd) values(SEQ_CARDITEM.nextval,SEQ_USER.currval,SEQ_PRODUCT.currval, 2,'18-Jan-21');	
+	
+	
 insert into categories (categoryid,catname) VALUES (SEQ_GENERAL.nextval,'Audio');
 insert into products (productid,category_id,name,description,price,STATUS)
     values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Sennheiser Momentum Headphone','Brand new condition.',419,1);
@@ -288,7 +324,21 @@ insert into products (productid,category_id,name,description,price,STATUS)
 	
 insert into categories (categoryid,catname) VALUES (SEQ_GENERAL.nextval,'Books');
 insert into products (productid,category_id,name,description,price,status)
-    values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Guide for Canadian','Ensure you’re getting the most out of your textbook',32,1);    
+    values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Guide for Canadian','Ensure you’re getting the most out of your textbook',32,1);
+
+		insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
+			values(SEQ_USER.nextval,'Ann','Elerk','Ann@gmail.com','12-Oct-95','Female');
+		insert into address (addressid,user_id,city,no,street,province,postalcode,phone)
+			values(SEQ_ADDRESS.nextval,SEQ_USER.currval,'Toronto','235','Young','ON','M1G222','4156587845');
+			
+			insert into carditems (carditemsid,user_id,product_id,qty,dateadd) values(SEQ_CARDITEM.nextval,SEQ_USER.currval,SEQ_PRODUCT.currval, 1,'12-Feb-21');	
+			
+		insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
+			values(SEQ_USER.nextval,'Atieh','Hosseini','Atieh@gmail.com','14-June-88','Female');
+		insert into address (addressid,user_id,city,no,street,province,postalcode,phone)
+			values(SEQ_ADDRESS.nextval,SEQ_USER.currval,'Victoria','41','St George','BC','KLM232','684752145');
+	insert into carditems (carditemsid,user_id,product_id,qty,dateadd) values(SEQ_CARDITEM.nextval,SEQ_USER.currval,SEQ_PRODUCT.currval, 1,'19-March-21');	
+    
 insert into products (productid,category_id,name,description,price,status)
     values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Fluent in 3 Months','Fluent in 3 Months',15,1);
 insert into products (productid,category_id,name,description,price,status)
@@ -325,21 +375,8 @@ insert into Discounts (discountid,name,discount,startdate,enddate,qty)
 insert into Discounts (discountid,name,discount,startdate,enddate,qty) 
 	values(SEQ_GENERAL.nextval,'New Year',35,'15-Dec-21','05-Jan-22',6);
 	
---********************************************************************************************	
-insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
-    values(SEQ_USER.nextval,'mohammad','etedali','etedali@gmail.com','12-July-85','Male');
-insert into address (addressid,user_id,city,no,street,province,postalcode,phone)
-    values(SEQ_ADDRESS.nextval,SEQ_USER.currval,'Scarborough','63','Darlingside Dr','ON','M1E3P2','4167221611');
-    
-insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
-    values(SEQ_USER.nextval,'Ann','Elerk','Ann@gmail.com','12-Oct-95','Female');
-insert into address (addressid,user_id,city,no,street,province,postalcode,phone)
-    values(SEQ_ADDRESS.nextval,SEQ_USER.currval,'Toronto','235','Young','ON','M1G222','4156587845');
-    
-insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
-    values(SEQ_USER.nextval,'Atieh','Hosseini','Atieh@gmail.com','14-June-88','Female');
-insert into address (addressid,user_id,city,no,street,province,postalcode,phone)
-    values(SEQ_ADDRESS.nextval,SEQ_USER.currval,'Victoria','41','St George','BC','KLM232','684752145');
+--********************************************************************************************	    
+
     
 insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
     values(SEQ_USER.nextval,'Bob','Easter','Bob@yahoo.com','18-Dec-65','Male');
