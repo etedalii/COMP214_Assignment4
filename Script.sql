@@ -1,11 +1,13 @@
-drop table carditems;
-drop table orderdetails;
+DROP table carditems;
+DROP table orderdetails;
 DROP TABLE ORDERS;
 DROP TABLE PRODUCTS;
 DROP TABLE CATEGORIES;
 DROP TABLE DISCOUNTS;
 DROP TABLE ADDRESS;
 DROP TABLE USERS;
+DROP table tblCardItems_trg;
+DROP table audit_tbl_order;
 
 DROP SEQUENCE SEQ_USER;
 DROP SEQUENCE SEQ_ADDRESS;
@@ -14,6 +16,12 @@ DROP SEQUENCE SEQ_GENERAL;
 DROP SEQUENCE SEQ_ORDER;
 DROP SEQUENCE SEQ_ORDERDETAIL;
 DROP SEQUENCE SEQ_PRODUCT;
+
+drop INDEX usr_lstn_idx;
+drop INDEX prd_nm_idx;
+drop INDEX prd_sts_idx;
+drop index dsc_date_idx;
+drop index order_date_idx;
 
 CREATE TABLE USERS 
 (
@@ -117,8 +125,8 @@ CREATE TABLE DISCOUNTS
   DISCOUNTID NUMBER NOT NULL 
 , NAME VARCHAR2(20) NOT NULL 
 , DISCOUNT NUMBER NOT NULL 
-, STARTDATE DATE NOT NULL 
-, ENDDATE DATE NOT NULL 
+, STARTDATE DATE 
+, ENDDATE DATE 
 , QTY NUMBER NOT NULL 
 , CONSTRAINT DISCOUNTS_PK PRIMARY KEY 
   (
@@ -444,7 +452,8 @@ insert into Discounts (discountid,name,discount,startdate,enddate,qty)
 	values(SEQ_GENERAL.nextval,'Spring',20,'01-March-21','15-March-21',3);
 insert into Discounts (discountid,name,discount,startdate,enddate,qty) 
 	values(SEQ_GENERAL.nextval,'Fall',10,'01-Sep-21','15-Sep-21',1);
-
+insert into Discounts (discountid,name,discount,startdate,enddate,qty) 
+	values(SEQ_GENERAL.nextval,'General',3,null,null,6);
 	
 --********************************************************************************************	    
     
@@ -466,4 +475,46 @@ insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender)
 insert into address (addressid,user_id,city,no,street,province,postalcode,phone)
     values(SEQ_ADDRESS.nextval,SEQ_USER.currval,'Toronto','64','Hulthman Dr','ON','m61G48','4154619007');     
 	
-commit;
+commit;	
+
+CREATE INDEX usr_lstn_idx ON users (lastname);
+CREATE INDEX prd_nm_idx ON products (NAME);
+CREATE INDEX prd_sts_idx ON products (price,status);
+create index dsc_date_idx ON DISCOUNTS(startdate,enddate);
+create index order_date_idx ON orders (createdate);
+
+-- Views ************************************************************
+CREATE OR REPLACE VIEW 	prduct_enbl
+as
+    select * from products where status = 1
+    with read only;
+    
+CREATE OR REPLACE VIEW 	prduct_dsbl
+as
+    select * from products where status = 0
+    with read only;
+    
+    CREATE OR REPLACE VIEW usr_withCard AS
+        SELECT u.firstname, u.lastname, c.qty, c.dateadd
+        FROM users u, carditems c
+        WHERE u.userid = c.user_id
+        with read only;
+-- Trigers *********************************************************************
+CREATE TABLE tblCardItems_trg (carditemid number, usr_id number,prd_id number,qty number, dateadd date);
+
+CREATE OR REPLACE TRIGGER trg_CardItem_ins 
+AFTER INSERT ON CardItems 
+FOR EACH ROW 
+BEGIN 
+     insert into tblCardItems_trg values (:new.carditemsid , :new.user_id,:new.product_id,:new.qty,:new.dateadd); 
+END;
+/
+
+Create table audit_tbl_order(op_time date, ord_id number,dis_id_before number,dis_id_after number, amount_before number,amount_after number);
+CREATE OR REPLACE TRIGGER audit_trg
+AFTER INSERT OR DELETE OR UPDATE ON orders 
+FOR EACH ROW 
+BEGIN 
+     insert into audit_tbl_order values (sysdate, :new.orderid, :old.discount_id,:new.discount_id ,:old.amount, :new.amount); 
+END; 
+/
