@@ -98,6 +98,7 @@ CREATE TABLE PRODUCTS
 , DESCRIPTION VARCHAR2(100) 
 , PRICE NUMBER NOT NULL 
 , STATUS NUMBER NOT NULL 
+, HSTREQUIRE NUMBER NOT NULL
 , CONSTRAINT PRODUCTS_PK PRIMARY KEY 
   (
     PRODUCTID 
@@ -310,8 +311,8 @@ CREATE SEQUENCE SEQ_USER
 
 --********************************************************************************************************
 insert into categories (categoryid,catname) VALUES (SEQ_GENERAL.nextval,'Art');
-insert into products (productid,category_id,name,description,price,STATUS)
-    values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Old Country Roses','Featuring sprays of red',75,1);
+insert into products (productid,category_id,name,description,price,STATUS, HSTREQUIRE)
+    values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Old Country Roses','Featuring sprays of red',75,1,1);
 	
 insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
     values(SEQ_USER.nextval,'mohammad','etedali','etedali@gmail.com','12-July-85','Male');
@@ -320,20 +321,20 @@ insert into address (addressid,user_id,city,no,street,province,postalcode,phone)
 insert into carditems (carditemsid,user_id,product_id,qty,dateadd) values(SEQ_CARDITEM.nextval,SEQ_USER.currval,SEQ_PRODUCT.currval, 2,'18-Jan-21');	
 	
 insert into categories (categoryid,catname) VALUES (SEQ_GENERAL.nextval,'Audio');
-insert into products (productid,category_id,name,description,price,STATUS)
-    values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Sennheiser Momentum Headphone','Brand new condition.',419,1);
+insert into products (productid,category_id,name,description,price,STATUS, HSTREQUIRE)
+    values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Sennheiser Momentum Headphone','Brand new condition.',419,1,1);
 	
 insert into categories (categoryid,catname) VALUES (SEQ_GENERAL.nextval,'Baby Item');
-insert into products (productid,category_id,name,description,price,STATUS)
-    values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Carters size 6 months zip up','3 sleepers used by one baby girl excellent',18,1);
+insert into products (productid,category_id,name,description,price,STATUS, HSTREQUIRE)
+    values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Carters size 6 months zip up','3 sleepers used by one baby girl excellent',18,1,1);
 	
 insert into categories (categoryid,catname) VALUES (SEQ_GENERAL.nextval,'Bike');
-insert into products (productid,category_id,name,description,price,STATUS)
-    values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'2 BMX Style Bikes','Been sitting in the shed for 12 months',100,0);
+insert into products (productid,category_id,name,description,price,STATUS, HSTREQUIRE)
+    values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'2 BMX Style Bikes','Been sitting in the shed for 12 months',100,0,1);
 	
 insert into categories (categoryid,catname) VALUES (SEQ_GENERAL.nextval,'Books');
-insert into products (productid,category_id,name,description,price,status)
-    values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Guide for Canadian','Ensure you’re getting the most out of your textbook',32,1);
+insert into products (productid,category_id,name,description,price,status, HSTREQUIRE)
+    values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Guide for Canadian','Ensure you’re getting the most out of your textbook',32,1,1);
 
 		insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
 			values(SEQ_USER.nextval,'Ann','Elerk','Ann@gmail.com','12-Oct-95','Female');
@@ -348,8 +349,8 @@ insert into products (productid,category_id,name,description,price,status)
 			values(SEQ_ADDRESS.nextval,SEQ_USER.currval,'Victoria','41','St George','BC','KLM232','684752145');
 	insert into carditems (carditemsid,user_id,product_id,qty,dateadd) values(SEQ_CARDITEM.nextval,SEQ_USER.currval,SEQ_PRODUCT.currval, 1,'19-March-21');	
     
-insert into products (productid,category_id,name,description,price,status)
-    values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Fluent in 3 Months','Fluent in 3 Months',15,1);
+insert into products (productid,category_id,name,description,price,status, HSTREQUIRE)
+    values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Fluent in 3 Months','Fluent in 3 Months',15,1,1);
     
         insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
             values(SEQ_USER.nextval,'Bob','Easter','Bob@yahoo.com','18-Dec-65','Male');
@@ -359,8 +360,8 @@ insert into products (productid,category_id,name,description,price,status)
         insert into orders(orderid,user_id,discount_id,createdate,amount) values(seq_order.nextval,seq_user.currval,null,'28-Feb-21',15);
         insert into orderdetails(orderdetailid,order_Id,qty,price,product_id) values(seq_orderdetail.nextval,seq_order.currval,1,15,seq_product.currval);
     
-insert into products (productid,category_id,name,description,price,status)
-    values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'2021 CFA Level 3','The complete set includes all ',199,1);
+insert into products (productid,category_id,name,description,price,status, HSTREQUIRE)
+    values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'2021 CFA Level 3','The complete set includes all ',199,1,1);
     
         insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
             values(SEQ_USER.nextval,'Kathy','Hoss','hoss@msn.com','09-Nov-04','Female');
@@ -370,17 +371,17 @@ insert into products (productid,category_id,name,description,price,status)
         insert into orders(orderid,user_id,discount_id,createdate,amount) values(seq_order.nextval,seq_user.currval,null,'12-Dec-20',199);
         insert into orderdetails(orderdetailid,order_Id,qty,price,product_id) values(seq_orderdetail.nextval,seq_order.currval,1,199,seq_product.currval);
     
-insert into products (productid,category_id,name,description,price,status)
-    values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Animal Farm','Complete version',62,1);
+insert into products (productid,category_id,name,description,price,status, HSTREQUIRE)
+    values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Animal Farm','Complete version',62,1,1);
 	
 insert into categories (categoryid,catname) VALUES (SEQ_GENERAL.nextval,'Business');
 insert into categories (categoryid,catname) VALUES (SEQ_GENERAL.nextval,'Camera');
 insert into categories (categoryid,catname) VALUES (SEQ_GENERAL.nextval,'CD and DVD');
 
 insert into categories (categoryid,catname) VALUES (SEQ_GENERAL.nextval,'Computer');
-insert into products (productid,category_id,name,description,price,status)
-    values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'HP pavilion 17z laptop','Refurbished HP Nb 17z laptop',500,1);
-insert into products (productid,category_id,name,description,price,status)values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'High-end ThinkPad i7','corporate grade, business ultrabook in prestine physical',489,1);
+insert into products (productid,category_id,name,description,price,status, HSTREQUIRE)
+    values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'HP pavilion 17z laptop','Refurbished HP Nb 17z laptop',500,1,1);
+insert into products (productid,category_id,name,description,price,status, HSTREQUIRE)values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'High-end ThinkPad i7','corporate grade, business ultrabook in prestine physical',489,1,1);
 
         insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
             values(SEQ_USER.nextval,'Soren','serjoei','sorejo@gmail.com','06-June-91','Male');
@@ -391,12 +392,12 @@ insert into products (productid,category_id,name,description,price,status)values
      insert into orderdetails(orderdetailid,order_Id,qty,price,product_id) values(seq_orderdetail.nextval,seq_order.currval,2,489,seq_product.currval);
 
 insert into categories (categoryid,catname) VALUES (SEQ_GENERAL.nextval,'Electronics');
-insert into products (productid,category_id,name,description,price,status)
-    values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Ooma HD3 cordless','cordless handset - Bluetooth',65,0);
+insert into products (productid,category_id,name,description,price,status, HSTREQUIRE)
+    values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Ooma HD3 cordless','cordless handset - Bluetooth',65,0,1);
 	
 insert into categories (categoryid,catname) VALUES (SEQ_GENERAL.nextval,'Furniture');
-insert into products (productid,category_id,name,description,price,status)
-    values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Desk 48x24','Desk – 48x24 with drawers – New',275,1);
+insert into products (productid,category_id,name,description,price,status, HSTREQUIRE)
+    values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Desk 48x24','Desk – 48x24 with drawers – New',275,1,1);
     
     insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
         values(SEQ_USER.nextval,'John','Kale','Kale@msn.com','16-Jan-62','Male');
@@ -411,7 +412,7 @@ insert into products (productid,category_id,name,description,price,status)
 	
 insert into categories (categoryid,catname) VALUES (SEQ_GENERAL.nextval,'Health');
 
-insert into products (productid,category_id,name,description,price,status)values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'SANITIZER/SOAP DISPENSER','STERYLL SANITIZERS are Licensed and Authorized by HEALTH CANADA',49.99,1);
+insert into products (productid,category_id,name,description,price,status, HSTREQUIRE)values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'SANITIZER/SOAP DISPENSER','STERYLL SANITIZERS are Licensed and Authorized by HEALTH CANADA',49.99,1,1);
         insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
             values(SEQ_USER.nextval,'Nazy','Tabaei','Nazy@gmail.com','12-Sep-01','Female');
         insert into address (addressid,user_id,city,no,street,province,postalcode,phone)
@@ -419,13 +420,13 @@ insert into products (productid,category_id,name,description,price,status)values
         insert into orders(orderid,user_id,discount_id,createdate,amount) values(seq_order.nextval,seq_user.currval,null,'18-Jan-21',49.99);
         insert into orderdetails(orderdetailid,order_Id,qty,price,product_id) values(seq_orderdetail.nextval,seq_order.currval,1,49.99,seq_product.currval);
      
-     insert into products (productid,category_id,name,description,price,status)values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'3M Reusable P95 Safety Mask','3M Reusable P95 Valved Safety Mask',100,0);   
-     insert into products (productid,category_id,name,description,price,status)values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'perfume Armaf','106 ml sealed box',35,0);   
-     insert into products (productid,category_id,name,description,price,status)values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'perfume Dark chocolate','4 oz, 120ml',30,0);
-     insert into products (productid,category_id,name,description,price,status)values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Oxygen Cylinder','Medline HCS53006',80,0);
+     insert into products (productid,category_id,name,description,price,status, HSTREQUIRE)values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'3M Reusable P95 Safety Mask','3M Reusable P95 Valved Safety Mask',100,0,1);   
+     insert into products (productid,category_id,name,description,price,status, HSTREQUIRE)values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'perfume Armaf','106 ml sealed box',35,0,1);   
+     insert into products (productid,category_id,name,description,price,status, HSTREQUIRE)values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'perfume Dark chocolate','4 oz, 120ml',30,0,1);
+     insert into products (productid,category_id,name,description,price,status, HSTREQUIRE)values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Oxygen Cylinder','Medline HCS53006',80,0,1);
      
      
-     insert into products (productid,category_id,name,description,price,status)values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Mask (Adult/Children)Gloves','medical class 2',19,1);
+     insert into products (productid,category_id,name,description,price,status, HSTREQUIRE)values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Mask (Adult/Children)Gloves','medical class 2',19,1,1);
         
         insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
             values(SEQ_USER.nextval,'Sara','Sirvan','ssvan@yahoo.com','19-Nov-89','Female');
@@ -441,9 +442,29 @@ insert into products (productid,category_id,name,description,price,status)values
         insert into orders(orderid,user_id,discount_id,createdate,amount) values(seq_order.nextval,seq_user.currval,null,'28-March-21',38);
         insert into orderdetails(orderdetailid,order_Id,qty,price,product_id) values(seq_orderdetail.nextval,seq_order.currval,2,19,seq_product.currval);
         
+   insert into categories (categoryid,catname) VALUES (SEQ_GENERAL.nextval,'Groceries');   
+    insert into products (productid,category_id,name,description,price,status, HSTREQUIRE)
+        values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Meat','Pork',7,1,0); 
         
+    insert into products (productid,category_id,name,description,price,status, HSTREQUIRE)
+        values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Eggs','Medline Size',6,1,0);
         
+        insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
+            values(SEQ_USER.nextval,'Pheobie','Phibs','phibs@hotmail.com','16-Aug-84','Female');
+        insert into address (addressid,user_id,city,no,street,province,postalcode,phone)
+            values(SEQ_ADDRESS.nextval,SEQ_USER.currval,'Dartmouth','15','Richards Dr','NS','B3A2P1','9024632820'); 
+        insert into carditems (carditemsid,user_id,product_id,qty,dateadd) values(SEQ_CARDITEM.nextval,SEQ_USER.currval,SEQ_PRODUCT.currval, 1, To_date(sysdate));
         
+    insert into products (productid,category_id,name,description,price,status, HSTREQUIRE)
+        values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Bread','Slice',3,1,0);  
+        
+        insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
+            values(SEQ_USER.nextval,'Ahmad','etedali','ahmade@gmail.com','03-March-60','Male');
+        insert into address (addressid,user_id,city,no,street,province,postalcode,phone)
+            values(SEQ_ADDRESS.nextval,SEQ_USER.currval,'Toronto','64','Hulthman Dr','ON','m61G48','4154619007');  
+        
+        insert into orders(orderid,user_id,discount_id,createdate,amount) values(seq_order.nextval,seq_user.currval,null,'3-April-21',6);
+        insert into orderdetails(orderdetailid,order_Id,qty,price,product_id) values(seq_orderdetail.nextval,seq_order.currval,2,3,seq_product.currval);
         
 --******************************************************************************************
 insert into Discounts (discountid,name,discount,startdate,enddate,qty) 
@@ -469,12 +490,6 @@ insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender)
 insert into address (addressid,user_id,city,no,street,province,postalcode,phone)
     values(SEQ_ADDRESS.nextval,SEQ_USER.currval,'Montrear','418','Green Dr','QC','QCE516','124587254');   
       
-    
-insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender) 
-    values(SEQ_USER.nextval,'Ahmad','etedali','ahmade@gmail.com','03-March-60','Male');
-insert into address (addressid,user_id,city,no,street,province,postalcode,phone)
-    values(SEQ_ADDRESS.nextval,SEQ_USER.currval,'Toronto','64','Hulthman Dr','ON','m61G48','4154619007');     
-	
 commit;	
 
 CREATE INDEX usr_lstn_idx ON users (lastname);
@@ -518,3 +533,4 @@ BEGIN
      insert into audit_tbl_order values (sysdate, :new.orderid, :old.discount_id,:new.discount_id ,:old.amount, :new.amount); 
 END; 
 /
+
