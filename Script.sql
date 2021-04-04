@@ -318,7 +318,16 @@ insert into USERS (userid,firstname,lastname,email,dateofbirth,Gender)
     values(SEQ_USER.nextval,'mohammad','etedali','etedali@gmail.com','12-July-85','Male');
 insert into address (addressid,user_id,city,no,street,province,postalcode,phone)
     values(SEQ_ADDRESS.nextval,SEQ_USER.currval,'Scarborough','63','Darlingside Dr','ON','M1E3P2','4167221611');
-insert into carditems (carditemsid,user_id,product_id,qty,dateadd) values(SEQ_CARDITEM.nextval,SEQ_USER.currval,SEQ_PRODUCT.currval, 2,'18-Jan-21');	
+insert into carditems (carditemsid,user_id,product_id,qty,dateadd) values(SEQ_CARDITEM.nextval,SEQ_USER.currval,SEQ_PRODUCT.currval, 2,'18-Jan-21');
+
+insert into products (productid,category_id,name,description,price,STATUS, HSTREQUIRE)
+    values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'oil painting','Oil painting on canvas from mats restaurant',49,1,1);
+    
+insert into carditems (carditemsid,user_id,product_id,qty,dateadd) values(SEQ_CARDITEM.nextval,SEQ_USER.currval,SEQ_PRODUCT.currval, 1,'18-Jan-21');
+
+insert into products (productid,category_id,name,description,price,STATUS, HSTREQUIRE)
+    values (SEQ_PRODUCT.nextval,SEQ_GENERAL.currval,'Color Ink Painting','Original Color Ink Painting, 14 x 26',89,1,1);
+    insert into carditems (carditemsid,user_id,product_id,qty,dateadd) values(SEQ_CARDITEM.nextval,SEQ_USER.currval,SEQ_PRODUCT.currval, 2,'18-Jan-21');
 	
 insert into categories (categoryid,catname) VALUES (SEQ_GENERAL.nextval,'Audio');
 insert into products (productid,category_id,name,description,price,STATUS, HSTREQUIRE)
@@ -533,4 +542,197 @@ BEGIN
      insert into audit_tbl_order values (sysdate, :new.orderid, :old.discount_id,:new.discount_id ,:old.amount, :new.amount); 
 END; 
 /
+--***************************************************************************************************************
+create or replace PROCEDURE products_updatePrice
+    (
+    hst number,
+    addPrice PRODUCTS.PRICE%TYPE,
+    Response OUT VARCHAR
+    )
+    IS
+    CustExP EXCEPTION;
+    newPrice PRODUCTS.PRICE%TYPE;
+    localHst number;
+    CURSOR c1 IS SELECT productid,name,price,hstrequire
+    FROM products
+    WHERE status = 1;
+    total number;
+    pro_id products.productid%TYPE;
+    pro_name products.name%type;
+    pro_price products.price%type;
+    pro_hstReq products.hstrequire%type;
+BEGIN
+    IF hst <= 0  THEN 
+        Response := 'wrong value';
+        RAISE CustExP;
+    END IF;
+    total := 0;
+    localHst :=  hst / 100;
+    open c1;    
+        LOOP
+            FETCH c1 INTO pro_id, pro_name,pro_price,pro_hstReq;
+            EXIT WHEN c1%NOTFOUND;
+            if(pro_hstReq = 1) then
+                pro_price := pro_price + (pro_price * localHst);
+            else
+                pro_price := pro_price + addPrice;
+            end if;
+            
+            update products set price = pro_price where productid = pro_id;
+            IF SQL%rowcount = 1 THEN
+                total := total + 1;
+             ELSIF SQL%rowcount = 0 THEN 
+                  RAISE_APPLICATION_ERROR(-20050 , 'Incorrect record found= ' || pro_name);
+            END IF; 
+            
+            end loop;
+    close c1;
 
+    if(total > 0) then
+        Response := 'The: ' || total || ' records was updated successfully';
+        commit;
+    end if;
+
+  EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('No data information');
+  WHEN CustExP THEN 
+    DBMS_OUTPUT.PUT_LINE('Hst number must be greater than zero');
+        
+end products_updatePrice;
+/
+CREATE or replace PROCEDURE sp_CardItemAdd
+(
+    product_id IN products.productid%TYPE,
+    user_id IN users.userid%TYPE,
+    qty IN cardItems.qty%TYPE,
+    cardItems_Result OUT carditems%ROWTYPE
+)
+is
+    cardItemId number;
+    userCount number;
+    productCount number;
+    CustExP EXCEPTION;
+begin
+    select count(userId) into userCount from USERS where userid = user_id;
+    select count(productid) into productCount from Products where productid = product_id;
+    
+    IF userCount = 0 THEN 
+         RAISE_APPLICATION_ERROR(-20050 , 'This userid is not exists: ' || user_id);
+    END IF;
+    IF productCount = 0 THEN 
+         RAISE_APPLICATION_ERROR(-20050 , 'This product is not exists: ' || product_id);
+    END IF;
+    
+    IF qty = 0 THEN 
+        RAISE CustExP;
+    END IF;
+    
+    cardItemId:= fc_CardItem_add(user_id,product_id,qty);
+    
+    SELECT *  INTO cardItems_Result
+    FROM carditems 
+    WHERE carditemsid = cardItemId;
+    
+    EXCEPTION
+  WHEN CustExP THEN 
+    DBMS_OUTPUT.PUT_LINE('Qty is mandetory');
+
+end sp_CardItemAdd;
+/
+
+create or replace PROCEDURE sp_cardItemToOrderByUserId
+    (usrid carditems.user_id%type,
+    Response OUT VARCHAR
+    )
+    IS
+    CURSOR c1 IS SELECT carditemsid,product_id,qty
+    FROM carditems
+    WHERE user_id = usrid;
+    userCount number;
+    ci_id CardItems.CardItemsId%TYPE;
+    ci_prdId carditems.product_id%TYPE;
+    ci_qty carditems.qty%type;
+    hst number;
+    product products%ROWTYPE;
+    pro_price products.price%type;
+    totalPrice number;
+    orderId number;
+BEGIN
+    totalPrice := 0;
+    select count(userId) into userCount from USERS where userid = usrid;
+    IF userCount = 0 THEN 
+         RAISE_APPLICATION_ERROR(-20050 , 'This userid is not exists: ' || usrid);
+    END IF;
+    
+    hst :=  13 / 100;
+    insert into orders (orderid,user_id,discount_id,createdate,amount) 
+                values (seq_order.nextval,usrid,null,sysdate,0);
+    orderId := SEQ_ORDER.currval;           
+    open c1;    
+        LOOP
+            FETCH c1 INTO ci_id, ci_prdId,ci_qty;
+            EXIT WHEN c1%NOTFOUND;
+            select * into product from products where productid = ci_prdId;
+            if(product.hstrequire = 1) then
+                pro_price := product.price + (product.price * hst);
+            else
+                pro_price := product.price;
+            end if;
+            insert into orderdetails(orderdetailid,order_id,qty,price,product_id)    
+                values(SEQ_ORDERDETAIL.nextval, orderId, ci_qty, product.price, ci_prdid);
+            
+            totalPrice := totalPrice + (ci_qty * product.price);
+            delete cardItems where carditemsid = ci_id;
+            end loop;
+    close c1;
+
+    update orders set amount = totalPrice where orderId = orderId;
+    Response := 'All Orders are saved the total price is: ' || totalPrice;
+    commit;
+end sp_cardItemToOrderByUserId;
+/
+CREATE or replace PROCEDURE sp_getdiscount
+(
+    dsntId OUT discounts.discountid%TYPE,
+    dsnt OUT discounts.discount%TYPE,
+    qty_out OUT discounts.qty%TYPE
+)
+is
+CustExP EXCEPTION;
+begin
+    select discountid,Discount,qty into dsntId, dsnt,qty_out from discounts
+        WHERE TO_DATE(sysdate, 'DD-MM-YY') BETWEEN TO_DATE(startdate, 'DD-MM-YY') AND TO_DATE(enddate, 'DD-MM-YY');
+        
+    EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('No discount information');
+    
+end sp_getdiscount; 
+/
+
+--*********************************************************************************
+CREATE OR REPLACE FUNCTION fc_CardItem_add(userId IN NUMBER,productId IN NUMBER,qty IN NUMBER) RETURN NUMBER
+ IS
+	RESULT_Id number;
+    BEGIN
+        insert into cardItems (carditemsid,user_id,product_id,qty,dateadd) values(seq_general.nextval,userId,productId,qty,to_date(sysdate));
+        RESULT_Id:=seq_general.currval;
+        commit;
+       RETURN RESULT_Id;
+    END;
+/
+
+CREATE OR REPLACE FUNCTION fc_mostPopularProduct RETURN NUMBER
+ IS
+	RESULT_Id number;
+    BEGIN
+      select product_id into RESULT_Id from
+        (select  product_id, sum(qty) count from orderdetails
+        group by product_id
+        order by count desc)
+        where  ROWNUM  = 1;
+        
+       RETURN RESULT_Id;
+    END;
+/
