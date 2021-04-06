@@ -17,11 +17,11 @@ DROP SEQUENCE SEQ_ORDER;
 DROP SEQUENCE SEQ_ORDERDETAIL;
 DROP SEQUENCE SEQ_PRODUCT;
 
-drop INDEX usr_lstn_idx;
-drop INDEX prd_nm_idx;
-drop INDEX prd_sts_idx;
-drop index dsc_date_idx;
-drop index order_date_idx;
+drop INDEX indx_usr_lstn_idx;
+drop INDEX indx_prd_nm_idx;
+drop INDEX indx_prd_sts_idx;
+drop index indx_dsc_date_idx;
+drop index indx_order_date_idx;
 
 CREATE TABLE USERS 
 (
@@ -501,11 +501,13 @@ insert into address (addressid,user_id,city,no,street,province,postalcode,phone)
       
 commit;	
 
-CREATE INDEX usr_lstn_idx ON users (lastname);
-CREATE INDEX prd_nm_idx ON products (NAME);
-CREATE INDEX prd_sts_idx ON products (price,status);
-create index dsc_date_idx ON DISCOUNTS(startdate,enddate);
-create index order_date_idx ON orders (createdate);
+--   Index ----------------------------------------------------------------------
+
+CREATE INDEX indx_usr_lstn_idx ON users (lastname);
+CREATE INDEX indx_prd_nm_idx ON products (NAME);
+CREATE INDEX indx_prd_sts_idx ON products (price,status);
+create index indx_dsc_date_idx ON DISCOUNTS(startdate,enddate);
+create index indx_order_date_idx ON orders (createdate);
 
 -- Views ************************************************************
 CREATE OR REPLACE VIEW 	prduct_enbl
@@ -534,12 +536,12 @@ BEGIN
 END;
 /
 
-Create table audit_tbl_order(op_time date, ord_id number,dis_id_before number,dis_id_after number, amount_before number,amount_after number);
+Create table audit_tbl_order(op_time date, ord_id_befor number,ord_id_after number,dis_id_before number,dis_id_after number, amount_before number,amount_after number);
 CREATE OR REPLACE TRIGGER audit_trg
 AFTER INSERT OR DELETE OR UPDATE ON orders 
 FOR EACH ROW 
 BEGIN 
-     insert into audit_tbl_order values (sysdate, :new.orderid, :old.discount_id,:new.discount_id ,:old.amount, :new.amount); 
+     insert into audit_tbl_order values (sysdate,:old.orderid, :new.orderid, :old.discount_id,:new.discount_id ,:old.amount, :new.amount); 
 END; 
 /
 --***************************************************************************************************************
@@ -735,4 +737,17 @@ CREATE OR REPLACE FUNCTION fc_mostPopularProduct RETURN NUMBER
         
        RETURN RESULT_Id;
     END;
+/
+
+create or replace function fc_get_usersWithoutBuy
+  return sys_refcursor
+as  
+  l_rc sys_refcursor;
+begin
+  open l_rc
+   for select * from users
+            where userid not in (select user_id from orders)
+            and userid not in (select user_id from carditems);
+  return l_rc; 
+end;
 /
